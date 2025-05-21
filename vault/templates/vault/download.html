@@ -1,0 +1,51 @@
+{% extends "vault/base.html" %}
+{% load static %}
+
+{% block title %}Download {{ file.original_filename }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-download"></i> Download File</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    <strong>Important:</strong> You need the encryption password to download this file.
+                </div>
+                
+                <div class="mb-4">
+                    <h5>{{ file.original_filename }}</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Size:</strong> {{ file.file_size|filesizeformat }}</li>
+                        <li><strong>Uploaded:</strong> {{ file.upload_date|date:"M d, Y H:i" }}</li>
+                    </ul>
+                </div>
+                
+                {% if error %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-x-circle"></i> {{ error }}
+                </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="decryption_password" class="form-label">Encryption Password</label>
+                        <input type="password" class="form-control" id="decryption_password" 
+                               name="decryption_password" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-file-lock"></i> Decrypt & Download
+                        </button>
+                        <a href="{% url 'file_list' %}" class="btn btn-outline-secondary">Back to Files</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

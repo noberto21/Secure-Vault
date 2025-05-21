@@ -1,0 +1,45 @@
+{% extends "vault/base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-cloud-upload"></i> Upload File</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.file.id_for_label }}" class="form-label">File</label>
+                        {% render_field form.file class="form-control" %}
+                        <div class="form-text">Maximum file size: 50MB</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.encryption_password.id_for_label }}" class="form-label">Encryption Password</label>
+                        {% render_field form.encryption_password class="form-control" %}
+                        <div class="form-text">Minimum 8 characters. Remember this password - it cannot be recovered!</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.confirm_password.id_for_label }}" class="form-label">Confirm Password</label>
+                        {% render_field form.confirm_password class="form-control" %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-lock"></i> Encrypt & Upload
+                        </button>
+                        <a href="{% url 'file_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
