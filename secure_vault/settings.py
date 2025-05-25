@@ -63,7 +63,7 @@ ROOT_URLCONF = 'secure_vault.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +74,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 WSGI_APPLICATION = 'secure_vault.wsgi.application'
@@ -127,8 +131,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'vault/static')]
 
-LOGIN_REDIRECT_URL = 'file_list'
-LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'  # Name of your login URL pattern
+LOGIN_REDIRECT_URL = 'file_list'  # Where to redirect after login
+LOGOUT_REDIRECT_URL = 'login'  # Where to redirect after logout
 
 # For production, you'll want to set these properly
 SECURE_SSL_REDIRECT = False  # Set to True in production

@@ -1,4 +1,7 @@
 from django import forms
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(label='Select file to upload')
@@ -22,3 +25,10 @@ class UploadFileForm(forms.Form):
             raise forms.ValidationError("Passwords don't match")
         
         return cleaned_data
+
+class RegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')

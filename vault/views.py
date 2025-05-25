@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, FileResponse
 from django.conf import settings
 from .models import VaultFile, AccessLog, UserProfile
-from .forms import UploadFileForm
+from .forms import UploadFileForm, RegistrationForm
 from .utils.crypto import encrypt_file, decrypt_file, generate_key
 from .utils.audit import log_access
 import os
@@ -11,6 +11,7 @@ import tempfile
 import hashlib
 from django.core.files.base import ContentFile
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_protect
 
 @login_required
 def upload_file(request):
@@ -149,3 +150,20 @@ def delete_file(request, file_id):
         return redirect('file_list')
     
     return redirect('file_list')
+
+@csrf_protect
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            
+            # Create UserProfile for the new user
+            UserProfile.objects.create(user=user, role='user')
+            
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}! You can now login.')
+            return redirect('login')
+    else:
+        form = RegistrationForm()
+    return render(request, 'vault/register.html', {'form': form})
